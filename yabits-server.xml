@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>yabits-server</Name>
+  <Repository>ghcr.io/darkishlocket10/yabits-server:latest</Repository>
+  <Registry>https://github.com/users/DarkishLocket10/packages/container/package/yabits-server</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <!-- The image is distroless: no shell, no package manager. The Console button
+       in the Unraid UI will therefore fail, which is the intended trade. This
+       element is required by the template format, so it names the shell the UI
+       would try rather than one that exists. -->
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/DarkishLocket10/yabits-unraid/issues</Support>
+  <Project>https://github.com/DarkishLocket10/yabits-unraid</Project>
+  <Overview>
+    Self-hosted sync server and web client for yabits, an iOS habit tracker.[br][br]
+    One container, one SQLite file, no external database. The web client has every
+    feature the app has, so it is usable as the primary interface rather than a
+    read-only mirror. Reads come from browser storage, so the network is never
+    between a tap and the screen updating.[br][br]
+    Conflicts are shown rather than silently resolved: both values are kept, you
+    choose, and the discarded one stays recoverable.[br][br]
+    No telemetry and no third-party services. Supported backup and restore
+    commands create, validate, remediate, and atomically activate SQLite snapshots.[br][br]
+    [b]Before you start:[/b] two settings have no safe default and the container
+    will refuse to run without them.[br]
+    [b]YABITS_SECRET_KEY[/b] must be at least 32 characters. Generate one on the
+    Unraid terminal with: openssl rand -base64 32[br]
+    [b]YABITS_EXTERNAL_URL[/b] must be the https address you will actually reach
+    this on, for example https://habits.example.com[br][br]
+    [b]First run:[/b] a one-time setup token is printed to the container log and
+    stored nowhere else. Open the log, copy the token, and claim the admin account
+    with it. Until then the instance serves nothing but the setup page. The token
+    expires after 60 minutes and a new one is generated on every start while the
+    instance is unclaimed, so if you missed it, restart the container and read the
+    log again. Nothing needs deleting.[br][br]
+    Reverse proxy and Cloudflare instructions, including the settings Server-Sent
+    Events need, are in README.md in the public template repository.
+  </Overview>
+  <Category>Productivity: Cloud: Tools:Utilities</Category>
+  <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/DarkishLocket10/yabits-unraid/main/yabits-server.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/DarkishLocket10/yabits-unraid/main/yabits-server.png</Icon>
+  <!-- No user flag here, on purpose. The image already runs as 99:100, Unraid's
+       nobody:users, set once in the Dockerfile (see the APP_UID comment there).
+       This template used to force 99:100 onto an image built for 65532, and the
+       two disagreeing was a startup failure on a fresh volume: Docker seeds an
+       empty volume from the image's own /data, ownership included, so the
+       directory arrived owned by 65532 mode 0700 and uid 99 could not create the
+       database in it. The image has no shell and no root to chown anything at
+       startup, so the uid has to be right by construction rather than fixed later.
+
+       To run as some other uid, add the Docker user flag to the parameters below
+       AND make the Data folder owned by that uid first. Nothing inside the
+       container can do the second part for you.
+
+       (Written without the two leading hyphens Docker flags carry, because an XML
+       comment may not contain them. The parameters themselves are below.)
+
+       Read only root filesystem plus a tmpfs for /tmp: the process writes only
+       under /data, and SQLite wants somewhere to spill a large sort. Dropping
+       all capabilities is free because the listener is above port 1024. -->
+  <ExtraParams>--read-only --tmpfs /tmp:rw,noexec,nosuid,size=16m --security-opt no-new-privileges:true --cap-drop ALL</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+
+  <Config
+    Name="WebUI Port"
+    Target="8080"
+    Default="8080"
+    Mode="tcp"
+    Description="Host port for the web client and the sync API. If SWAG reaches this container over a Docker network, you can remove this port entirely and expose nothing on the LAN."
+    Type="Port"
+    Display="always"
+    Required="true"
+    Mask="false">8080</Config>
+
+  <!-- /mnt/user/appdata is portable across pool names. On Unraid 6.12 and later,
+       an exclusive appdata share can still bypass FUSE while retaining this path.
+       A direct /mnt/<pool> path is an advanced alternative for an operator who
+       knows the pool name and accepts coupling the template to it. -->
+  <Config
+    Name="Data"
+    Target="/data"
+    Default="/mnt/user/appdata/yabits-server"
+    Mode="rw"
+    Description="The SQLite database and everything else that must survive replacing the container. The current image includes an offline validated backup CLI (`yabitsd backup --output`) and the complete offline validated restore workflow. Stop and verify the serving container, then run the exact deployed image and the fail-closed workflow in README.md. Copying the database, its WAL or SHM sidecar, or this whole folder is not a supported backup. Do not create live filesystem snapshots or reflinks.&#13;&#10;&#13;&#10;Run exactly one serving process for this database. Do not run sqlite3 or another yabitsd against it. The server holds /data/yabits.sqlite.yabits-lock for the database lifetime; it must remain a regular single-link 0600 file owned by the container uid on the database filesystem.&#13;&#10;&#13;&#10;Configure the appdata share with a primary pool and no secondary storage. On Unraid 6.12 or later, enable exclusive access and confirm the share reports Exclusive access: Yes for the best SQLite performance. The portable /mnt/user path then resolves directly to that pool. A direct /mnt/&lt;pool&gt;/appdata/... path is an advanced alternative only when you know the actual pool name.&#13;&#10;&#13;&#10;Create the folder before you start the container, and make sure it belongs to nobody:users:&#13;&#10;  mkdir -p /mnt/user/appdata/yabits-server &amp;&amp; chown 99:100 /mnt/user/appdata/yabits-server&#13;&#10;Docker creates a missing host folder owned by root, and this container is not root, so it would fail to start with 'unable to open database file'. Fix that by chowning the folder, never by making the container root or the share 777: the database would then be readable by every device on the network that can reach the appdata share."
+    Type="Path"
+    Display="always"
+    Required="true"
+    Mask="false">/mnt/user/appdata/yabits-server</Config>
+
+  <Config
+    Name="Secret key"
+    Target="YABITS_SECRET_KEY"
+    Default=""
+    Mode=""
+    Description="At-rest encryption key for TOTP secrets and token hashes, so a stolen copy of the database file is not immediately a stolen second factor. At least 32 characters. Generate one with: openssl rand -base64 32 &#13;&#10;Write it down somewhere safe. Changing it later makes existing second factors and device tokens unreadable."
+    Type="Variable"
+    Display="always"
+    Required="true"
+    Mask="true"/>
+
+  <Config
+    Name="External URL"
+    Target="YABITS_EXTERNAL_URL"
+    Default=""
+    Mode=""
+    Description="The origin a browser actually reaches, for example https://habits.example.com with no trailing path. There is intentionally no default: an example address is not a working address, and the container refuses to start until you replace the blank. The server cannot work this out for itself behind a reverse proxy, because the Host header is set by whoever is calling. Must be https unless you are testing on localhost: session cookies are Secure and a browser throws away a Secure cookie sent from a plain http origin, which looks exactly like a login form that does nothing."
+    Type="Variable"
+    Display="always"
+    Required="true"
+    Mask="false"/>
+
+  <Config
+    Name="Trusted proxy CIDRs"
+    Target="YABITS_TRUSTED_PROXY_CIDRS"
+    Default=""
+    Mode=""
+    Description="Which peers may set X-Forwarded-For, as exact CIDR addresses separated by commas. Leave empty if nothing proxies to this container. Set only SWAG's stable address, for example 172.30.50.2/32 or one IPv6 /128. Do not enter a Docker network prefix or any whole subnet: every container in that range could invent client addresses. Never set 0.0.0.0/0."
+    Type="Variable"
+    Display="always"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Setup token file"
+    Target="YABITS_SETUP_TOKEN_FILE"
+    Default="0"
+    Mode=""
+    Description="0 prints the one-time setup token only to the container log. 1 also writes /data/setup-token with mode 0600 as two lines containing the token and its Unix-millisecond expiry. Every startup removes a stale file when disabled or claimed. Claim and expiry attempt immediate removal and a bounded retry; a committed claim remains successful because a stale token is unusable. Only 0 or 1 is accepted."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">0</Config>
+
+  <Config
+    Name="Storage quota per user in MiB"
+    Target="YABITS_STORAGE_QUOTA_MIB"
+    Default="256"
+    Mode=""
+    Description="Per-user storage quota in MiB. Accepts one base-10 integer from 64 through 16384. A change is reconciled for every user in one transaction before the listener starts, and startup fails without changing stored limits if any user does not fit a requested decrease."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">256</Config>
+
+  <Config
+    Name="Tombstone retention in days"
+    Target="YABITS_TOMBSTONE_RETENTION_DAYS"
+    Default="180"
+    Mode=""
+    Description="How long sync tombstones are retained. Accepts one base-10 integer from 180 through 3650."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">180</Config>
+
+  <Config
+    Name="Recycle retention in days"
+    Target="YABITS_RECYCLE_RETENTION_DAYS"
+    Default="180"
+    Mode=""
+    Description="How long deleted record snapshots remain recoverable. Accepts one base-10 integer from 30 through 3650 and cannot exceed the effective tombstone retention."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">180</Config>
+
+  <Config
+    Name="Event heartbeat in seconds"
+    Target="YABITS_SSE_HEARTBEAT_SECONDS"
+    Default="15"
+    Mode=""
+    Description="Server-Sent Events heartbeat interval. Accepts one base-10 integer from 5 through 25. Keep the default unless the complete proxy path has a stricter idle timeout."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">15</Config>
+
+  <Config
+    Name="Log level"
+    Target="YABITS_LOG_LEVEL"
+    Default="info"
+    Mode=""
+    Description="debug, info, warn or error. The one first-run setup-token warning is always emitted, even when this threshold is error."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">info</Config>
+
+  <Config
+    Name="Listen address"
+    Target="YABITS_LISTEN"
+    Default=":8080"
+    Mode=""
+    Description="host:port inside the container. Leave this alone unless you have a reason; changing the port here also means changing the container port above."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Session idle timeout"
+    Target="YABITS_SESSION_IDLE"
+    Default="14d"
+    Mode=""
+    Description="Idle lifetime for future non-admin sessions only. Admin sessions are fixed at 12 hours idle and 7 days absolute, and existing sessions retain the lifetimes stored when issued. Accepts Go duration syntax plus d for days and w for weeks, so 14d and 336h are the same thing."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Session absolute lifetime"
+    Target="YABITS_SESSION_ABSOLUTE"
+    Default="90d"
+    Mode=""
+    Description="Absolute lifetime for future non-admin sessions only. Admin sessions are fixed at 12 hours idle and 7 days absolute, and existing sessions retain the lifetimes stored when issued. Must be at least the non-admin idle timeout."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Argon2 memory in KiB"
+    Target="YABITS_ARGON2_MEMORY"
+    Default=""
+    Mode=""
+    Description="Optional Argon2id memory override in KiB, from 19456 through 262144. Set this, Argon2 time, and Argon2 parallelism together or leave all three blank. A partial set fails startup. After first claim, supplied values must exactly match the immutable persisted profile."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Argon2 time cost"
+    Target="YABITS_ARGON2_TIME"
+    Default=""
+    Mode=""
+    Description="Optional Argon2id iteration count, from 2 through 10. Set this, Argon2 memory, and Argon2 parallelism together or leave all three blank."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Argon2 parallelism"
+    Target="YABITS_ARGON2_PARALLELISM"
+    Default=""
+    Mode=""
+    Description="Optional Argon2id lane count, from 1 through 4. Set this, Argon2 memory, and Argon2 time together or leave all three blank."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false"/>
+
+  <Config
+    Name="Data directory"
+    Target="YABITS_DATA_DIR"
+    Default="/data"
+    Mode=""
+    Description="Absolute path inside the container where the database lives. It must match the container side of the Data mapping above, or a container replacement takes the database with it."
+    Type="Variable"
+    Display="advanced"
+    Required="false"
+    Mask="false">/data</Config>
+</Container>
