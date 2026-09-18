@@ -1,5 +1,8 @@
 # Deploying yabits-server on Unraid, behind SWAG and Cloudflare
 
+**New here?** Start with the [simple setup guide](SETUP.md). It covers regular Docker,
+Unraid, connecting your phone and checking sync in both directions.
+
 This is the whole path from nothing to a working instance on your own domain,
 in the order that avoids backtracking. Every step depends on the one before it,
 so doing them out of order mostly produces certificate errors that look like
@@ -395,6 +398,13 @@ Unraid template tracks `:latest` for convenient updates, so verify the resolved
 digest before applying an update there.
 
 ## Backup and restore
+
+**Version 1.0.4 restore limitation:** backup creation works, but starting a restored
+server fails because of an authentication-state check. Do not activate a restore
+with that release. Keep the original volume, backup and secret key. The fix is
+tested locally and awaiting publication; use a fixed release for the restore
+steps below.
+
 
 The current image includes the offline `yabitsd backup` command. The serving
 container must be stopped and Docker's `Running=false` and `Status=exited` state
