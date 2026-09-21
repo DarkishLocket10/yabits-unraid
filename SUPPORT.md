@@ -20,6 +20,12 @@ Check the habit’s Health source and whether the Health app contains data for t
 
 Use Settings → Notifications to check iOS permission and your reminder schedules. Focus modes and iOS notification settings can silence delivery. Check Settings → Sounds for the main sound setting and any habit or check-in-state overrides. Check-in sounds respect the silent switch.
 
+## Supporting the developer
+
+Settings → About → Support the developer has optional, one-time tips. Choose an amount and confirm in Apple’s purchase sheet. Every feature stays free, and you can cancel the sheet without paying. A tip in TestFlight is a sandbox purchase and does not charge you.
+
+If a tip is waiting for approval, give it time to complete. If Yabits cannot verify a tip, check your Apple purchase history before trying again. Apple handles billing and refund requests through [reportaproblem.apple.com](https://reportaproblem.apple.com).
+
 ## Backups and your data
 
 Use Settings → Data & backup → Backups & restore to make or restore a local backup. Restoring replaces the current local data and first makes a safety backup. Local backups stay on that device, so they are not a replacement for protecting the device itself. CSV and database exports let you keep a separate copy of your manual tracking data; imported Health readings are excluded.

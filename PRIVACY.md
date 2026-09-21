@@ -26,6 +26,10 @@ If you connect a server, the app sends habit configuration, organization, manual
 
 The person running that server controls its database, backups and logs and can access the data it stores. Choose a server operator you trust. Yabits stores the app token in the iOS Keychain. Imported Health readings and sound files are not sent to the server.
 
+## Optional tips
+
+You can support the developer with a one-time in-app purchase. Apple processes the payment under its own privacy policy. Yabits receives a transaction confirmation to verify the tip and show a thank-you; it does not receive your card details or send your purchase history to a developer server. Tips do not change access to any feature.
+
 ## Permissions and files
 
 Notifications are optional and scheduled on your device. Camera access is used only when you choose to scan a server enrollment QR code. Imported sounds stay on your device and play when your sound settings call for them.
