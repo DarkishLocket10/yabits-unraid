@@ -1,5 +1,7 @@
 # Deploying yabits-server on Unraid, behind SWAG and Cloudflare
 
+Using the iPhone app? Read [Help & support](SUPPORT.md) or the [Privacy policy](PRIVACY.md).
+
 **New here?** Start with the [simple setup guide](SETUP.md). It covers regular Docker,
 Unraid, connecting your phone and checking sync in both directions.
 
