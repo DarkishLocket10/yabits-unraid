@@ -405,13 +405,6 @@ digest before applying an update there.
 database. [Release notes](RELEASE-1.0.5.md) and the [step-by-step Docker restore
 guide](QUICKSTART-RESTORE.md) explain the fix and recovery steps.
 
-**Version 1.0.4 restore limitation:** backup creation works, but starting a restored
-server fails because of an authentication-state check. Do not activate a restore
-with that release. Keep the original volume, backup and secret key. The fix is
-tested locally and awaiting publication; use a fixed release for the restore
-steps below.
-
-
 The current image includes the offline `yabitsd backup` command. The serving
 container must be stopped and Docker's `Running=false` and `Status=exited` state
 verified before the one-shot command starts. Do not run it with `docker exec` or

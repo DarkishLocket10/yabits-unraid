@@ -45,4 +45,3 @@ uid:gid 99:100, SPDX SBOM and SLSA provenance. The exact published digest passes
 the fresh Docker setup, backup/restore, re-enrollment and native sync drill.
 Local BuildKit produced this release without hosted Actions minutes or a
 GitHub workflow OIDC signature. The running Unraid server was not restarted.
-
