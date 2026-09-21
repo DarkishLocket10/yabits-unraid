@@ -401,6 +401,10 @@ digest before applying an update there.
 
 ## Backup and restore
 
+**Use server 1.0.5 or newer for restore.** Version 1.0.4 cannot start a restored
+database. [Release notes](RELEASE-1.0.5.md) and the [step-by-step Docker restore
+guide](QUICKSTART-RESTORE.md) explain the fix and recovery steps.
+
 **Version 1.0.4 restore limitation:** backup creation works, but starting a restored
 server fails because of an authentication-state check. Do not activate a restore
 with that release. Keep the original volume, backup and secret key. The fix is

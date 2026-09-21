@@ -51,7 +51,7 @@ printf '.env\n*.sqlite*\nbackups/\n' > "$folder/.gitignore"
 cat > "$folder/compose.yaml" <<'YAML'
 services:
   yabits:
-    image: ghcr.io/darkishlocket10/yabits-server:1.0.4
+    image: ghcr.io/darkishlocket10/yabits-server:1.0.5
     restart: unless-stopped
     environment:
       YABITS_EXTERNAL_URL: ${YABITS_EXTERNAL_URL:?Keep the .env file beside compose.yaml}

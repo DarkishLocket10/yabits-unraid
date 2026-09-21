@@ -210,7 +210,7 @@ choosing Self-hosted switches away from iCloud without deleting local habits.
 
 ## Updates and backups
 
-The helper starts a known server release (`1.0.4`) and Caddy (`2.11.4-alpine`). It
+The helper starts a known server release (`1.0.5`) and Caddy (`2.11.4-alpine`). It
 doesn't silently change versions. Read the new release notes, take a backup, then
 edit the corresponding image tag in `compose.yaml` and run:
 
@@ -257,8 +257,7 @@ remove old backup copies only after verifying your separate copy.
 
 ### Restoring a server
 
-**Server 1.0.4 has a restore startup bug. Do not activate a server restore on that
-version.** Backup creation and normal sync work; the problem happens when starting
-the restored database. Keep the backup, original volume and permanent secret key.
-A fix has passed the backup, restore, sign-in and sync checks, but is not yet in a
-published image. Update to the fixed release before restoring.
+Use server **1.0.5 or newer**. Version 1.0.4 cannot start a restored database.
+Update before recovering, and keep the backup, original volume and permanent
+secret key. Follow the [step-by-step restore guide](QUICKSTART-RESTORE.md); it
+covers preparation, account checks, activation and reconnecting your devices.
