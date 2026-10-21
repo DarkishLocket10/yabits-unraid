@@ -2,6 +2,10 @@
 
 Using the iPhone app? Read [Help & support](SUPPORT.md) or the [Privacy policy](PRIVACY.md).
 
+Current release: **1.0.6** adds direct task state controls and improves smaller-screen layouts.
+Use iOS **1.0 (20)** for matching numeric skipped and failed states.
+See [release notes](RELEASE-1.0.6.md).
+
 **New here?** Start with the [simple setup guide](SETUP.md). It covers regular Docker,
 Unraid, connecting your phone and checking sync in both directions.
 
