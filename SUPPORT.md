@@ -6,6 +6,18 @@ Check that you’re using the latest version of Yabits. When reporting a problem
 
 You can [report a bug on GitHub](https://github.com/DarkishLocket10/yabits-unraid/issues). GitHub issues are public. Do not post habit histories, Health data, passwords, enrollment links or app tokens.
 
+## Daily notes and failure reasons
+
+In Settings → Preferences → Daily notes, turn on Enable daily notes. Tap a task
+and choose Today's note, swipe left on its row for Today's note, or press and
+hold a recent day's check-in to edit that day's note. Tap a day in History to
+edit its value and note together. The task name and date appear in the editor.
+
+Ask why a task failed opens an optional explanation after a failed check-in.
+Choose Not now to keep the failed check-in without adding a note. Both options
+also appear in the welcome walkthrough. Turning notes off keeps saved notes;
+turn it on again to read or edit them.
+
 ## Sync
 
 Open Settings → Data & backup and check the selected sync service and its status. For iCloud, use the same Apple Account on each device and make sure iCloud is available. For a self-hosted server, use the same server account with a separate app token for each device, then tap Sync now.

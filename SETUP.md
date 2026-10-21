@@ -210,7 +210,7 @@ choosing Self-hosted switches away from iCloud without deleting local habits.
 
 ## Updates and backups
 
-The helper starts a known server release (`1.0.6`) and Caddy (`2.11.4-alpine`). It
+The helper starts a known server release (`1.0.7`) and Caddy (`2.11.4-alpine`). It
 doesn't silently change versions. Read the new release notes, take a backup, then
 edit the corresponding image tag in `compose.yaml` and run:
 

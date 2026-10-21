@@ -2,9 +2,9 @@
 
 Using the iPhone app? Read [Help & support](SUPPORT.md) or the [Privacy policy](PRIVACY.md).
 
-Current release: **1.0.6** adds direct task state controls and improves smaller-screen layouts.
-Use iOS **1.0 (20)** for matching numeric skipped and failed states.
-See [release notes](RELEASE-1.0.6.md).
+Current release: **1.0.7** adds daily notes and optional failure explanations for checklist and numeric tasks.
+Use iOS **1.0 (21)** for matching notes and failure prompt controls.
+See [release notes](RELEASE-1.0.7.md).
 
 **New here?** Start with the [simple setup guide](SETUP.md). It covers regular Docker,
 Unraid, connecting your phone and checking sync in both directions.
@@ -381,12 +381,13 @@ hostname, and no second proxy sits between SWAG and the container.
 
 ## Verify the release image
 
-Releases are published only by the repository's manual, tag-selected
-`Publish release image` workflow. Ordinary pushes cannot publish an image. The
-workflow builds one `linux/amd64` + `linux/arm64` manifest, attaches BuildKit's
-maximum provenance and SPDX SBOM attestations, and signs the immutable digest
-with GitHub's OIDC identity through Cosign. Resolve the tag to a digest before a
-first install or upgrade, and retain that digest with the backup record:
+Release images contain both `linux/amd64` and `linux/arm64`, with BuildKit
+provenance and SPDX SBOM attestations. The manual, tag-selected workflow also
+signs with GitHub OIDC through Cosign. Local releases, including 1.0.7, have
+provenance and SBOM but no workflow OIDC signature. Ordinary source pushes do
+not publish an image. See the release record for the verification that applies.
+Resolve the tag to a digest before installation or upgrade, and retain that
+digest with the backup record. For a workflow-signed release:
 
 ```sh
 YABITS_VERSION='1.0.0'
